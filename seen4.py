@@ -2,26 +2,26 @@ import pygame
 from pygame.locals import QUIT,KEYDOWN,K_SPACE,K_q
 import sys
 
-def seen4(screen,font1,font2):
+def seen4(screen,font1,font2,level):
     ck = pygame.time.Clock()
     isSpacekey=False
     isQkey=False
     while (1):
         screen.fill((255,255,255))# 画面を白に
-        txt = font2.render("Survive Game", True, (200,0,0))   # 描画する文字列の設定
-        screen.blit(txt, [100, 100])# 文字列の表示位置        P1.update()
+        txt_pic = font2.render("Survive Game", True, (200,0,0))   # 描画する文字列の設定
+        screen.blit(txt_pic, [100, 100])# 文字列の表示位置        P1.update()
 
-        txt = font1.render("oh no! ", True, (150,0,0))   # 描画する文字列の設定
-        screen.blit(txt, [100, 200])# 文字列の表示位置        P1.update()
+        txt_pic = font1.render("oh no! ", True, (150,0,0))   # 描画する文字列の設定
+        screen.blit(txt_pic, [100, 200])# 文字列の表示位置        P1.update()
 
-        txt = font2.render("your Level down! ", True, (100,0,0))   # 描画する文字列の設定
-        screen.blit(txt, [100, 300])# 文字列の表示位置        P1.update()
+        txt_pic = font2.render("your Level down! ", True, (100,0,0))   # 描画する文字列の設定
+        screen.blit(txt_pic, [100, 300])# 文字列の表示位置        P1.update()
 
-        txt = font2.render("hit space key to restart", True, (100,0,0))   # 描画する文字列の設定
-        screen.blit(txt, [100, 400])# 文字列の表示位置
+        txt_pic = font2.render("hit space key to restart", True, (100,0,0))   # 描画する文字列の設定
+        screen.blit(txt_pic, [100, 400])# 文字列の表示位置
 
-        txt = font2.render("hit q key to quit", True, (100,0,0))   # 描画する文字列の設定
-        screen.blit(txt, [100, 500])# 文字列の表示位置        P1.update()
+        txt_pic = font2.render("hit q key to quit", True, (100,0,0))   # 描画する文字列の設定
+        screen.blit(txt_pic, [100, 500])# 文字列の表示位置        P1.update()
         for event in pygame.event.get():
             if event. type == QUIT:
                 pygame.quit()

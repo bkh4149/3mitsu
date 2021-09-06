@@ -5,33 +5,35 @@ import random
 import time
 
 class Judge():
-    def __init__(self):
-        self.t = 20
-        self.ut = 0
-        self.ut0 = int(time.time())
+    def __init__(self,sec):
+        self.leftTime = sec
+        self.countDownTime = 0
+        self.gameStartTime = int(time.time())
 
-    def update(self):  
-        self.ut = self.t - (int(time.time())-self.ut0)
+    def update(self):
+        nowTime = int(time.time())
+        self.countDownTime = self.leftTime - (nowTime - self.gameStartTime)
 
     def draw(self,screen,font,P):
-        t = "HP="+str(P.hitpoint)   # 描画する文字列の設定
-        txt = font.render(t, True, (100,0,0))   # 描画する文字列の設定
-        screen.blit(txt, [20, 50])# 文字列の表示位置
+        txt = "HP="+str(P.hitpoint)   # 描画する文字列の設定
+        txt_pic = font.render(txt, True, (100,0,0))   # 描画する文字列の設定
+        screen.blit(txt_pic, [20, 50])# 文字列の表示位置
 
-        t = "CountDown "+str(self.ut)+"sec"   # 描画する文字列の設定
-        txt = font.render(t, True, (100,0,0))   # 描画する文字列の設定
-        screen.blit(txt, [20, 100])# 文字列の表示位置
+        txt = "CountDown "+str(self.countDownTime)+"sec"   # 描画する文字列の設定
+        txt_pic = font.render(txt, True, (100,0,0))   # 描画する文字列の設定
+        screen.blit(txt_pic, [20, 100])# 文字列の表示位置
 
 class Player():
-    def __init__(self):
+    def __init__(self, hp):
         self.px = 400
         self.py = 300
         self.r1 = 10
         self.pvx = 0
         self.pvy = 0
-        self.hitpoint = 20
+        self.hitpoint = hp
         self.red = 0
-        self.blue = 200
+        self.blue = 250
+        self.rate = self.blue/hp
     def update(self):
         self.px += self.pvx
         self.py += self.pvy
@@ -56,9 +58,11 @@ class Player():
                     self.pvy = -1.2
                 elif event.key==K_DOWN:
                     self.pvy = 1.2# 終了（ないとエラーで終了することになる）
-    def draw(self,screen):
-        pygame.draw.circle(screen,(self.red,0,self.blue),(int(self.px),int(self.py)),self.r1)
 
+    def draw(self,screen):
+        self.blue = self.hitpoint*self.rate
+        self.red = 255 - self.blue
+        pygame.draw.circle(screen,(int(self.red),0,int(self.blue)),(int(self.px),int(self.py)),self.r1)
 class Ball():
     def __init__(self,x,y):
         self.bx = x
@@ -75,40 +79,45 @@ class Ball():
             self.bvx *= -1
         if self.by >= 600 or self.by < 0:
             self.bvy *= -1
+        #当たり判定
         if abs(self.bx-P.px) <= (P.r1+self.r2):
             if abs(self.by-P.py) <= (P.r1+self.r2):
                 P.hitpoint -=1
-                P.blue -= 2
-                P.red += 2
                 print(P.hitpoint)
     def draw(self,screen):
         pygame.draw.circle(screen,self.col,(int(self.bx),int(self.by)),self.r2)
 
-def seen2(screen,font):
+def seen2(screen,font,level):
+    isWin=False
     ck = pygame.time.Clock()
-    J1=Judge()
-    P1 = Player()
-    Bs  = []
-    m = 15
-    for i in range(m):
-        B = Ball(random.randint(100,700), random.randint(100,500))
-        Bs.append(B)
+    #審判
+    dict_sec={1:30, 2:55, 3:103}
+    sec = dict_sec[level]
+    J1=Judge(sec)
+    #プレイヤ
+    dict_hp = {1:40, 2:75, 3:150}
+    hp = dict_hp[level]
+    P1 = Player(hp)
+    #敵
+    dict_teki = {1:10, 2:20, 3:40}
+    teki = dict_teki[level]
+    Bs  = [Ball(random.randint(100,700), random.randint(100,500)) for i in range(teki)]
 
     while (1):
         screen.fill((255,255,255))# 画面を白に
         P1.update()
         P1.draw(screen)
-        for i in range(m):
+        for i in range(teki):
             Bs[i].update(P1)
             Bs[i].draw(screen)
         J1.update()
-        J1.draw(screen,font,P1)
+        J1.draw(screen, font, P1)
         if P1.hitpoint < 2:
-            f="make"
+            isWin = False
             break
-        if J1.ut<0:
-            f="kachi"
+        if J1.countDownTime < 0:
+            isWin = True
             break
         pygame.display.update() # 画面更新
         ck.tick(60) #1秒間で30フレームになるように33msecのwait
-    return f
+    return isWin
