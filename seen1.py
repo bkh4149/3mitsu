@@ -2,11 +2,10 @@ import pygame
 from pygame.locals import QUIT,KEYDOWN,K_SPACE
 import sys
 
-def seen1(screen,font1,font2,level):
+def seen1(screen,font1,font2,level,level_dict):
     ck = pygame.time.Clock()
     isSpacekey=False
-    dict={1:30, 2:55, 3:103}
-    sec=dict[level]
+    sec=level_dict["sec"][level]
 
     while (1):
         screen.fill((255,255,255))# 画面を白に

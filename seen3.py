@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import QUIT,KEYDOWN,K_SPACE,K_q
 import sys
 
-def seen3(screen,font1,font2,level):
+def seen3(screen,font1,font2,level,level_dict):
     ck = pygame.time.Clock()
     isSpacekey=False
     isQkey=False
@@ -14,7 +14,7 @@ def seen3(screen,font1,font2,level):
         txt_pic = font1.render("Congratulation!! ", True, (150,0,0))   # 描画する文字列の設定
         screen.blit(txt_pic, [100, 200])# 文字列の表示位置        P1.update()
 
-        txt = "your Level is " + str(level)
+        txt = "now, your Level is up to " + str(level)
         txt_pic = font2.render(txt, True, (100,0,0))   # 描画する文字列の設定
         screen.blit(txt_pic, [100, 300])# 文字列の表示位置        P1.update()
 

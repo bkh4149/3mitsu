@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import QUIT,KEYDOWN,K_SPACE,K_q
 import sys
 
-def seen4(screen,font1,font2,level):
+def seen4(screen,font1,font2,level,level_dict):
     ck = pygame.time.Clock()
     isSpacekey=False
     isQkey=False
@@ -14,7 +14,7 @@ def seen4(screen,font1,font2,level):
         txt_pic = font1.render("oh no! ", True, (150,0,0))   # 描画する文字列の設定
         screen.blit(txt_pic, [100, 200])# 文字列の表示位置        P1.update()
 
-        txt_pic = font2.render("your Level down! ", True, (100,0,0))   # 描画する文字列の設定
+        txt_pic = font2.render("your Level down! "+str(level), True, (100,0,0))   # 描画する文字列の設定
         screen.blit(txt_pic, [100, 300])# 文字列の表示位置        P1.update()
 
         txt_pic = font2.render("hit space key to restart", True, (100,0,0))   # 描画する文字列の設定

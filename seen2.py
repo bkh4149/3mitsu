@@ -5,23 +5,28 @@ import random
 import time
 
 class Judge():
-    def __init__(self,sec):
+    def __init__(self,sec,level):
         self.leftTime = sec
         self.countDownTime = 0
         self.gameStartTime = int(time.time())
+        self.level = level
 
     def update(self):
         nowTime = int(time.time())
         self.countDownTime = self.leftTime - (nowTime - self.gameStartTime)
 
     def draw(self,screen,font,P):
-        txt = "HP="+str(P.hitpoint)   # 描画する文字列の設定
-        txt_pic = font.render(txt, True, (100,0,0))   # 描画する文字列の設定
-        screen.blit(txt_pic, [20, 50])# 文字列の表示位置
+        txt = "HP="+str(P.hitpoint)
+        txt_pic = font.render(txt, True, (100,0,0))
+        screen.blit(txt_pic, [20, 50])
 
-        txt = "CountDown "+str(self.countDownTime)+"sec"   # 描画する文字列の設定
-        txt_pic = font.render(txt, True, (100,0,0))   # 描画する文字列の設定
-        screen.blit(txt_pic, [20, 100])# 文字列の表示位置
+        txt = "Level "+str(self.level)
+        txt_pic = font.render(txt, True, (100,0,0))
+        screen.blit(txt_pic, [220, 50])
+
+        txt = "CountDown "+str(self.countDownTime)+"sec"
+        txt_pic = font.render(txt, True, (100,0,0))
+        screen.blit(txt_pic, [20, 100])
 
 class Player():
     def __init__(self, hp):
@@ -87,20 +92,18 @@ class Ball():
     def draw(self,screen):
         pygame.draw.circle(screen,self.col,(int(self.bx),int(self.by)),self.r2)
 
-def seen2(screen,font,level):
+def seen2(screen,font,level,level_dict):
     isWin=False
     ck = pygame.time.Clock()
+
     #審判
-    dict_sec={1:30, 2:55, 3:103}
-    sec = dict_sec[level]
-    J1=Judge(sec)
+    sec=level_dict["sec"][level]
+    J1=Judge(sec, level)
     #プレイヤ
-    dict_hp = {1:40, 2:75, 3:150}
-    hp = dict_hp[level]
+    hp = level_dict["hp"][level]
     P1 = Player(hp)
     #敵
-    dict_teki = {1:10, 2:20, 3:40}
-    teki = dict_teki[level]
+    teki = level_dict["teki"][level]
     Bs  = [Ball(random.randint(100,700), random.randint(100,500)) for i in range(teki)]
 
     while (1):
