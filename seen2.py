@@ -30,67 +30,66 @@ class Judge():
 
 class Player():
     def __init__(self, hp):
-        self.px = 400
-        self.py = 300
+        self.x = 400
+        self.y = 300
         self.r1 = 10
-        self.pvx = 0
-        self.pvy = 0
+        self.vx = 0
+        self.vy = 0
         self.hitpoint = hp
         self.red = 0
         self.blue = 250
         self.rate = self.blue/hp
     def update(self):
-        self.px += self.pvx
-        self.py += self.pvy
-        if self.px > 799:
-            self.px -= 2.5
-        if self.px < 0:
-            self.px += 2.5
-        if self.py > 599:
-            self.py -= 2.5
-        if self.py < 0:
-            self.py += 2.5
+        self.x += self.vx
+        self.y += self.vy
+        if self.x > 800:
+            self.x -= 2.5
+        elif self.x < 0:
+            self.x += 2.5
+        if self.y > 600:
+            self.y -= 2.5
+        elif self.y < 0:
+            self.y += 2.5
         for event in pygame.event.get():
             if event. type == QUIT:
                 pygame.quit()
                 sys. exit()
             elif event.type == KEYDOWN:
                 if event.key==K_LEFT:
-                    self.pvx = -1.2  # 横方向の速度
+                    self.vx = -1.3  # 横方向の速度
                 elif event.key==K_RIGHT:
-                    self.pvx = 1.2  # 横方向の速度
+                    self.vx = 1.3  # 横方向の速度
                 elif event.key==K_UP:
-                    self.pvy = -1.2
+                    self.vy = -1.3
                 elif event.key==K_DOWN:
-                    self.pvy = 1.2# 終了（ないとエラーで終了することになる）
+                    self.vy = 1.3 
 
     def draw(self,screen):
         self.blue = self.hitpoint*self.rate
         self.red = 255 - self.blue
-        pygame.draw.circle(screen,(int(self.red),0,int(self.blue)),(int(self.px),int(self.py)),self.r1)
+        pygame.draw.circle(screen,(int(self.red),0,int(self.blue)),(int(self.x),int(self.y)),self.r1)
 class Ball():
     def __init__(self,x,y):
-        self.bx = x
-        self.by = y
-        self.bvx = random.randint(10,30)/10
-        self.bvy = random.randint(8,32)/10
+        self.x = x
+        self.y = y
+        self.vx = random.randint(10,30)/10
+        self.vy = random.randint(8,32)/10
         self.col = (10,10,10)
         self.bc = 5
         self.r2 = 5
     def update(self,P):
-        self.bx += self.bvx
-        self.by += self.bvy
-        if self.bx >= 800 or self.bx < 0:
-            self.bvx *= -1
-        if self.by >= 600 or self.by < 0:
-            self.bvy *= -1
+        self.x += self.vx
+        self.y += self.vy
+        if self.x >= 800 or self.x < 0:
+            self.vx *= -1
+        if self.y >= 600 or self.y < 0:
+            self.vy *= -1
         #当たり判定
-        if abs(self.bx-P.px) <= (P.r1+self.r2):
-            if abs(self.by-P.py) <= (P.r1+self.r2):
+        if abs(self.x-P.x) <= (P.r1+self.r2) and abs(self.y-P.y) <= (P.r1+self.r2):
                 P.hitpoint -=1
-                print(P.hitpoint)
+                #print(P.hitpoint)
     def draw(self,screen):
-        pygame.draw.circle(screen,self.col,(int(self.bx),int(self.by)),self.r2)
+        pygame.draw.circle(screen,self.col,(int(self.x),int(self.y)),self.r2)
 
 def seen2(screen,font,level,level_dict):
     isWin=False
