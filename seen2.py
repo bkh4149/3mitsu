@@ -5,11 +5,10 @@ import random
 import time
 
 class Judge():
-    def __init__(self,sec,level):
+    def __init__(self,sec):
         self.leftTime = sec
         self.countDownTime = 0
         self.gameStartTime = int(time.time())
-        self.level = level
 
     def update(self):
         nowTime = int(time.time())
@@ -20,7 +19,7 @@ class Judge():
         txt_pic = font.render(txt, True, (100,0,0))
         screen.blit(txt_pic, [20, 50])
 
-        txt = "Level "+str(self.level)
+        txt = "Level "+str(P.level)
         txt_pic = font.render(txt, True, (100,0,0))
         screen.blit(txt_pic, [220, 50])
 
@@ -29,7 +28,7 @@ class Judge():
         screen.blit(txt_pic, [20, 100])
 
 class Player():
-    def __init__(self, hp):
+    def __init__(self, hp, level):
         self.x = 400
         self.y = 300
         self.r1 = 10
@@ -39,6 +38,7 @@ class Player():
         self.red = 0
         self.blue = 250
         self.rate = self.blue/hp
+        self.level = level
     def update(self):
         self.x += self.vx
         self.y += self.vy
@@ -97,10 +97,10 @@ def seen2(screen,font,level,level_dict):
 
     #審判
     sec=level_dict["sec"][level]
-    J1=Judge(sec, level)
+    J1=Judge(sec)
     #プレイヤ
     hp = level_dict["hp"][level]
-    P1 = Player(hp)
+    P1 = Player(hp, level)
     #敵
     teki = level_dict["teki"][level]
     Bs  = [Ball(random.randint(100,700), random.randint(100,500)) for i in range(teki)]
