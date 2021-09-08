@@ -1,5 +1,5 @@
 import pygame
-from pygame.locals import QUIT,KEYDOWN,K_LEFT,K_RIGHT,K_UP,K_DOWN
+from pygame.locals import QUIT,KEYDOWN,K_LEFT,K_RIGHT,K_UP,K_DOWN,K_SPACE
 import sys
 import random
 import time
@@ -31,7 +31,7 @@ class Player():
     def __init__(self, hp, level):
         self.x = 400
         self.y = 300
-        self.r1 = 10
+        self.r1 = 15
         self.vx = 0
         self.vy = 0
         self.hitpoint = hp
@@ -39,6 +39,8 @@ class Player():
         self.blue = 250
         self.rate = self.blue/hp
         self.level = level
+        self.isHit =False
+        self.tc = 60
     def update(self):
         self.x += self.vx
         self.y += self.vy
@@ -63,11 +65,19 @@ class Player():
                     self.vy = -1.3
                 elif event.key==K_DOWN:
                     self.vy = 1.3 
-
+                elif event.key==K_SPACE:
+                    self.tc = 10 
+        if self.tc < 60:
+            self.tc += 1
+        return int(self.tc)
     def draw(self,screen):
-        self.blue = self.hitpoint*self.rate
-        self.red = 255 - self.blue
-        pygame.draw.circle(screen,(int(self.red),0,int(self.blue)),(int(self.x),int(self.y)),self.r1)
+        if self.r1 > 15:#衝突時爆発
+            self.r1 -= 0.5
+            pygame.draw.circle(screen,(255,0,0),(int(self.x),int(self.y)),int(self.r1))
+        else:
+            self.blue = self.hitpoint*self.rate
+            self.red = 255 - self.blue
+            pygame.draw.circle(screen,(int(self.red),0,int(self.blue)),(int(self.x),int(self.y)),int(self.r1))
 class Ball():
     def __init__(self,x,y):
         self.x = x
@@ -76,7 +86,9 @@ class Ball():
         self.vy = random.randint(8,32)/10
         self.col = (10,10,10)
         self.bc = 5
-        self.r2 = 5
+        self.r = 5
+        self.isHit = False
+        self.hitAnime = 0
     def update(self,P):
         self.x += self.vx
         self.y += self.vy
@@ -85,11 +97,27 @@ class Ball():
         if self.y >= 600 or self.y < 0:
             self.vy *= -1
         #当たり判定
-        if abs(self.x-P.x) <= (P.r1+self.r2) and abs(self.y-P.y) <= (P.r1+self.r2):
-                P.hitpoint -=1
+        if abs(self.x-P.x) <= (P.r1+self.r):
+            if abs(self.y-P.y) <= (P.r1+self.r):
+                if self.isHit:
+                    pass
+                else:
+                    self.isHit = True
+                    P.hitpoint -=1
+                    P.isHit = True
+                    P.r1= 30
+                    self.r = 15
                 #print(P.hitpoint)
+        else:
+            self.isHit=False
+            P.isHit = False
     def draw(self,screen):
-        pygame.draw.circle(screen,self.col,(int(self.x),int(self.y)),self.r2)
+        if self.r>5:
+            self.r-=0.1
+            self.col = (210,110,10)
+        else:    
+            self.col = (10,10,10)
+        pygame.draw.circle(screen,self.col,(int(self.x),int(self.y)),int(self.r))
 
 def seen2(screen,font,level,level_dict):
     isWin=False
@@ -104,10 +132,10 @@ def seen2(screen,font,level,level_dict):
     #敵
     teki = level_dict["teki"][level]
     Bs  = [Ball(random.randint(100,700), random.randint(100,500)) for i in range(teki)]
-
+    tc = 60
     while (1):
         screen.fill((255,255,255))# 画面を白に
-        P1.update()
+        tc = P1.update()
         P1.draw(screen)
         for i in range(teki):
             Bs[i].update(P1)
@@ -121,5 +149,5 @@ def seen2(screen,font,level,level_dict):
             isWin = True
             break
         pygame.display.update() # 画面更新
-        ck.tick(60) #1秒間で30フレームになるように33msecのwait
+        ck.tick(tc) #1秒間で30フレームになるように33msecのwait
     return isWin

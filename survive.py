@@ -10,8 +10,8 @@ class Game():
         self.isSpacekey = False
         self.isQkey = False
         self.isWin = False
-        self.level_dict = {"sec":{1:10, 2:15, 3:20, 4:20, 5:20}, "hp":{1:40, 2:75, 3:120, 4:160, 5:200}, "teki":{1:10, 2:20, 3:26, 4:32, 5:40}}
-        #self.level_dict = {"sec":{1:30, 2:55, 3:70, 4:90, 5:110}, "hp":{1:40, 2:75, 3:120, 4:160, 5:200}, "teki":{1:10, 2:20, 3:26, 4:32, 5:40}}
+        #self.level_dict = {"sec":{1:10, 2:15, 3:20, 4:20, 5:20}, "hp":{1:40, 2:75, 3:120, 4:160, 5:200}, "teki":{1:10, 2:20, 3:26, 4:32, 5:40}}
+        self.level_dict = {"sec":{1:30, 2:55, 3:70, 4:90, 5:110}, "hp":{1:40, 2:75, 3:120, 4:160, 5:200}, "teki":{1:10, 2:20, 3:26, 4:32, 5:40}}
         self.level = 1
 
     def seen1(self):
@@ -92,7 +92,7 @@ class Game():
             txt_pic = self.font1.render("oh no! ", True, (150,0,0))   # 描画する文字列の設定
             self.screen.blit(txt_pic, [100, 200])# 文字列の表示位置        P1.update()
 
-            txt_pic = self.font2.render("your Level down! "+str(level), True, (100,0,0))   # 描画する文字列の設定
+            txt_pic = self.font2.render("your Level down! "+str(self.level), True, (100,0,0))   # 描画する文字列の設定
             self.screen.blit(txt_pic, [100, 300])# 文字列の表示位置        P1.update()
 
             txt_pic = self.font2.render("hit space key to restart", True, (100,0,0))   # 描画する文字列の設定
@@ -142,7 +142,6 @@ class Game():
             pygame.display.update() # 画面更新
             ck.tick(60) #1秒間で30フレームになるように33msecのwait
 
-
     def main(self):
         self.seen1()
         #seen1.seen1(self.screen, self.font, self.font2, self.level, self.level_dict)
@@ -155,12 +154,12 @@ class Game():
                     self.level += 1
                     self.seen3()
             else:      #Game over
-                self.level -= 1
+                if self.level >=2:
+                    self.level -= 1
                 self.seen4()
             if self.isQkey:
                 break
         print("Otukaresama deshita!")
-
 
 def main():
     pygame.init()
