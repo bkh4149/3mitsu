@@ -57,14 +57,15 @@ class Player():
                 pygame.quit()
                 sys. exit()
             elif event.type == KEYDOWN:
+                temp= 1.3*60/self.tc#マトリックスモードのときは動きを早くする
                 if event.key==K_LEFT:
-                    self.vx = -1.3  # 横方向の速度
+                    self.vx = -temp  # 横方向の速度
                 elif event.key==K_RIGHT:
-                    self.vx = 1.3  # 横方向の速度
+                    self.vx = temp  # 横方向の速度
                 elif event.key==K_UP:
-                    self.vy = -1.3
+                    self.vy = -temp
                 elif event.key==K_DOWN:
-                    self.vy = 1.3 
+                    self.vy = temp 
                 elif event.key==K_SPACE:
                     self.tc = 10 
         if self.tc < 60:
